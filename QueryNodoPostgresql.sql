@@ -46,7 +46,7 @@ BEGIN
     LOOP
         FETCH NEXT FROM ref_cursor INTO rec;
         EXIT WHEN NOT FOUND;
-        -- Procesa cada fila obtenida aquí, por ejemplo, puedes imprimirla
+        -- Procesa cada fila obtenida
         RAISE NOTICE 'Carrera: %, Competidor: %, Dorsal: %', rec.id_carrera, rec.id_competidor, rec.dorsal_participante;
     END LOOP;
 
@@ -123,7 +123,7 @@ BEGIN
     LOOP
         FETCH NEXT FROM ref_cursor INTO rec;
         EXIT WHEN NOT FOUND;
-        -- Procesa cada fila obtenida aquí, por ejemplo, puedes imprimirla
+        -- Procesa cada fila obtenida
         RAISE NOTICE 'Carrera: %, Trayecto: %, Competidor: %, Tiempo: %', rec.id_carrera, rec.id_trayecto, rec.id_competidor, rec.tiempo;
     END LOOP;
 
