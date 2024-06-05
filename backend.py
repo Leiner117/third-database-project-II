@@ -160,3 +160,13 @@ def update_tiempo_local(id_carrera, id_competidor, id_trayecto, tiempo):
 def delete_tiempo_local(id_carrera, id_competidor, id_trayecto):
     cursor_local.execute("CALL eliminar_tiempo_participante(%s, %s, %s)", (id_competidor,id_carrera, id_trayecto ))
     connection_local.commit()
+
+# obtener todos participantes  y sus tiempos de una carrera del nodo local
+def get_participantes_tiempos(id_carrera):
+    cursor_local.execute("SELECT * FROM PARTICIPANTES WHERE id_carrera = %s", (id_carrera,))
+    participantes = cursor_local.fetchall()
+    for participante in participantes:
+        cursor_local.execute("SELECT * FROM tiempos_participantes WHERE id_carrera = %s AND id_competidor = %s", (id_carrera, participante[1]))
+        tiempos = cursor_local.fetchall()
+        participante.append(tiempos)
+    return participantes

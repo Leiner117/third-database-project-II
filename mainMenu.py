@@ -1,15 +1,17 @@
 import tkinter as tk
 from tkinter import messagebox
-
+import Competidor
+import carreras
+import tiempos
 # Funciones de los botones
 def registro_competidores():
-    messagebox.showinfo("Registro de Competidores", "Función de Registro de Competidores")
+    Competidor.main()
 
 def gestion_carreras():
-    messagebox.showinfo("Gestión de Carreras", "Función de Gestión de Carreras")
+    carreras.main()
 
 def registro_participantes_tiempos():
-    messagebox.showinfo("Registro de Participantes y Tiempos", "Función de Registro de Participantes y Tiempos")
+    tiempos.main()
 
 def consultas_reportes():
     messagebox.showinfo("Consultas y Reportes", "Función de Consultas y Reportes")
