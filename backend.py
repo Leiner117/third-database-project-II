@@ -1,6 +1,9 @@
 from bd import Bd
+from bd_local import Bd_local
 cursor = Bd().cursor
 connection = Bd().connection
+cursor_local = Bd_local().cursor
+connection_local = Bd_local().conn
 # Recuperar todos los competirdores de la base de datos
 def get_competidores():
     cursor.execute("SELECT * FROM COMPETIDORES")
@@ -97,3 +100,63 @@ def delete_competidor_carrera(id_competidor):
     cursor.execute("UPDATE CARRERAS SET COMPETIDORES_REGISTRADOS = COMPETIDORES_REGISTRADOS - 1 WHERE ID = (SELECT CARRERA_ID FROM COMPETIDORES WHERE ID = :1)", (id_competidor,))
     cursor.execute("UPDATE COMPETIDORES SET CARRERA_ID = NULL WHERE ID = :1", (id_competidor,))
     connection.commit()
+
+# agregar participante a la base_local (id_carrera, id_competidor,dorsal), usar el procedimiento almacenado agregar_participante
+def add_participante(id_carrera, id_competidor, dorsal):
+    #verificar que la carrera exista en la base de datos central
+    cursor.execute("SELECT * FROM CARRERAS WHERE ID = :1", (id_carrera,))
+    carrera = cursor.fetchone()
+    if not carrera:
+        return
+    #verificar que el competidor exista en la base de datos central
+    cursor.execute("SELECT * FROM COMPETIDORES WHERE ID = :1", (id_competidor,))
+    competidor = cursor.fetchone()
+    if not competidor:
+        return
+    #verificar que el participante no este ya registrado
+    cursor_local.execute("SELECT * FROM PARTICIPANTES WHERE id_carrera = %s AND id_competidor = %s", (id_carrera, id_competidor))
+    participante = cursor_local.fetchone()
+    if participante:
+        return
+    cursor_local.execute("CALL insertar_participante(%s, %s, %s)", (id_carrera, id_competidor, dorsal))
+    connection_local.commit()
+
+# agregar tiempo a la base_local (id_carrera, id_competidor, id_trayecto, tiempo), usar el procedimiento almacenado agregar_tiempo
+def add_tiempo_local(id_carrera, id_competidor, id_trayecto, tiempo):
+    #verificar que la carrera exista en la base de datos central
+    cursor.execute("SELECT * FROM CARRERAS WHERE ID = :1", (id_carrera,))
+    carrera = cursor.fetchone()
+    if not carrera:
+        return
+    #verificar que el competidor exista en la base de datos central
+    cursor.execute("SELECT * FROM COMPETIDORES WHERE ID = :1", (id_competidor,))
+    competidor = cursor.fetchone()
+    if not competidor:
+        return
+    #verificar que el trayecto exista en la base de datos central
+    cursor.execute("SELECT * FROM TRAYECTOS WHERE ID = :1", (id_trayecto,))
+    trayecto = cursor.fetchone()
+    if not trayecto:
+        return
+    cursor_local.execute("CALL insertar_tiempoParticipante(%s, %s, %s, %s)", (id_carrera, id_trayecto,id_competidor,tiempo))
+    connection_local.commit()
+
+# actualizar datos de participante en la base_local (id_carrera, id_competidor, dorsal), usar el procedimiento almacenado actualizar_participante
+def update_participante(id_carrera, id_competidor, dorsal):
+    cursor_local.execute("CALL modificar_participante(%s, %s, %s)", (id_carrera, id_competidor, dorsal))
+    connection_local.commit()
+
+#eliminar participante de la base_local (id_competidor), no hay procedure
+def delete_participante(id_competidor):
+    cursor_local.execute("DELETE FROM PARTICIPANTES WHERE id_competidor = %s", (id_competidor,))
+    connection_local.commit()
+
+# modificar tiempo participante
+def update_tiempo_local(id_carrera, id_competidor, id_trayecto, tiempo):
+    cursor_local.execute("CALL actualizar_tiempo_participante(%s, %s, %s, %s)", (id_carrera, id_trayecto, id_competidor, tiempo))
+    connection_local.commit()
+
+# eliminar tiempo participante, con procedure
+def delete_tiempo_local(id_carrera, id_competidor, id_trayecto):
+    cursor_local.execute("CALL eliminar_tiempo_participante(%s, %s, %s)", (id_competidor,id_carrera, id_trayecto ))
+    connection_local.commit()

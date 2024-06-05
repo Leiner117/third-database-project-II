@@ -24,4 +24,3 @@ class Bd(metaclass=SingletonMeta):
             wallet_password = "A2laFU5aNqYN"
         )
         self.cursor = self.connection.cursor()
-        

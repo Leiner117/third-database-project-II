@@ -1,69 +1,95 @@
 import tkinter as tk
-from tkinter import messagebox
-from datetime import datetime
+from tkinter import ttk, messagebox
 
-
+# Funciones de los botones
 def agregar_carrera():
-    nombre = entry_nombre.get()
-    fecha = entry_fecha.get()
-    max_competidores = entry_max_competidores.get()
-    lugar = entry_lugar.get()
-    hora_salida = entry_hora_salida.get()
+    messagebox.showinfo("Agregar Carrera", "Función para agregar una nueva carrera")
 
-    # Validación simple de los campos
-    if not nombre or not fecha or not max_competidores or not lugar or not hora_salida:
-        messagebox.showwarning("Campos incompletos", "Por favor, complete todos los campos")
-        return
+def editar_carrera():
+    selected_item = tree.selection()
+    if selected_item:
+        messagebox.showinfo("Editar Carrera", "Función para editar la carrera seleccionada")
 
-    try:
-        datetime.strptime(fecha, "%Y-%m-%d")
-        datetime.strptime(hora_salida, "%H:%M")
-        int(max_competidores)
-    except ValueError:
-        messagebox.showwarning("Datos inválidos", "Por favor, ingrese datos válidos (Fecha: YYYY-MM-DD, Hora: HH:MM, Máximo Competidores: Número)")
-        return
+def eliminar_carrera():
+    selected_item = tree.selection()
+    if selected_item:
+        messagebox.showinfo("Eliminar Carrera", "Función para eliminar la carrera seleccionada")
 
-    messagebox.showinfo("Registro exitoso", f"Carrera '{nombre}' registrada correctamente")
+def salir():
     root.destroy()
 
+# Crear la ventana principal
 root = tk.Tk()
-root.title("Registrar Carrera")
-root.geometry("854x480")
+root.title("Gestión de Carreras")
 
-# Etiquetas y entradas para los campos de la carrera
-labels = [
-    tk.Label(root, text="Nombre:", font=("Arial", 14)),
-    tk.Label(root, text="Fecha (YYYY-MM-DD):", font=("Arial", 14)),
-    tk.Label(root, text="Máximo Competidores:", font=("Arial", 14)),
-    tk.Label(root, text="Lugar:", font=("Arial", 14)),
-    tk.Label(root, text="Hora de Salida (HH:MM):", font=("Arial", 14))
+# Establecer el tamaño de la ventana
+window_width = 854
+window_height = 480
+
+# Obtener el tamaño de la pantalla
+screen_width = root.winfo_screenwidth()
+screen_height = root.winfo_screenheight()
+
+# Calcular la posición centrada
+position_top = int(screen_height / 2 - window_height / 2)
+position_right = int(screen_width / 2 - window_width / 2)
+
+# Establecer la geometría de la ventana
+root.geometry(f'{window_width}x{window_height}+{position_right}+{position_top}')
+
+# Crear el marco principal
+frame = tk.Frame(root)
+frame.pack(fill=tk.BOTH, expand=True)
+
+# Crear la tabla
+columns = ("ID", "Nombre", "Fecha", "Máximo Competidores", "Lugar", "Hora de Salida")
+tree = ttk.Treeview(frame, columns=columns, show="headings")
+
+# Configurar las columnas
+for col in columns:
+    tree.heading(col, text=col)
+    tree.column(col, width=120, anchor=tk.CENTER)
+
+tree.pack(fill=tk.BOTH, expand=True)
+
+# Datos inventados
+carreras = [
+    {"ID": 1, "Nombre": "Carrera 1", "Fecha": "2024-06-15", "Máximo Competidores": 100, "Lugar": "Madrid", "Hora de Salida": "09:00"},
+    {"ID": 2, "Nombre": "Carrera 2", "Fecha": "2024-06-22", "Máximo Competidores": 150, "Lugar": "Barcelona", "Hora de Salida": "10:00"},
+    {"ID": 3, "Nombre": "Carrera 3", "Fecha": "2024-07-01", "Máximo Competidores": 200, "Lugar": "Valencia", "Hora de Salida": "08:00"},
+    {"ID": 4, "Nombre": "Carrera 4", "Fecha": "2024-07-10", "Máximo Competidores": 250, "Lugar": "Sevilla", "Hora de Salida": "07:30"},
+    {"ID": 5, "Nombre": "Carrera 5", "Fecha": "2024-07-20", "Máximo Competidores": 300, "Lugar": "Bilbao", "Hora de Salida": "09:30"}
 ]
 
-entries = [
-    tk.Entry(root, width=30),
-    tk.Entry(root, width=30),
-    tk.Entry(root, width=30),
-    tk.Entry(root, width=30),
-    tk.Entry(root, width=30)
-]
+# Insertar los datos en la tabla
+for carrera in carreras:
+    tree.insert('', tk.END, values=(carrera["ID"], carrera["Nombre"], carrera["Fecha"], carrera["Máximo Competidores"], carrera["Lugar"], carrera["Hora de Salida"]))
 
-# Empaquetar etiquetas usando grid
-for i, label in enumerate(labels):
-    label.grid(row=i, column=0, padx=10, pady=5, sticky="e")
+# Botones
+button_frame = tk.Frame(root)
+button_frame.pack(fill=tk.X, pady=10)
 
-# Empaquetar entradas usando grid
-for i, entry in enumerate(entries):
-    entry.grid(row=i, column=1, padx=10, pady=5, sticky="w")
+btn_agregar = tk.Button(button_frame, text="Agregar Carrera", command=agregar_carrera, font=("Arial", 18))
+btn_editar = tk.Button(button_frame, text="Editar Carrera", command=editar_carrera, font=("Arial", 18), state=tk.DISABLED)
+btn_eliminar = tk.Button(button_frame, text="Eliminar Carrera", command=eliminar_carrera, font=("Arial", 18), state=tk.DISABLED)
+btn_salir = tk.Button(button_frame, text="Salir", command=salir, font=("Arial", 18))
 
-# Botones para registrar y salir
-btn_registrar = tk.Button(root, text="Registrar Carrera", command="", font=("Arial", 18))
-btn_registrar.place(relx=0.5, rely=0.5, anchor="center")
+btn_agregar.pack(side=tk.LEFT, padx=10)
+btn_editar.pack(side=tk.LEFT, padx=10)
+btn_eliminar.pack(side=tk.LEFT, padx=10)
+btn_salir.pack(side=tk.RIGHT, padx=10)
 
-# Colocar el botón "Salir" en la esquina inferior derecha
-btn_salir = tk.Button(root, text="Salir", command=root.destroy, font=("Arial", 18))
-btn_salir.place(relx=1, rely=1, anchor="se", x=-10, y=-10)
+# Función para habilitar/deshabilitar botones según la selección en la tabla
+def on_tree_select(event):
+    selected_item = tree.selection()
+    if selected_item:
+        btn_editar.config(state=tk.NORMAL)
+        btn_eliminar.config(state=tk.NORMAL)
+    else:
+        btn_editar.config(state=tk.DISABLED)
+        btn_eliminar.config(state=tk.DISABLED)
 
+tree.bind("<<TreeviewSelect>>", on_tree_select)
+
+# Iniciar el bucle principal de la ventana
 root.mainloop()
-
-if __name__ == "__main__":
-    agregar_carrera()
