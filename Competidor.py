@@ -28,7 +28,7 @@ class CompetidorMenu:
     def __init__(self, root):
         self.root = root
         self.root.title("Menú de Competidores")
-        self.root.geometry("600x400")
+        self.root.geometry(f'{window_width}x{window_height}+{position_right}+{position_top}')
         self.root.configure(bg=BG_COLOR)
 
         self.font = font.Font(size=12)
@@ -38,7 +38,7 @@ class CompetidorMenu:
         tk.Button(self.menu_frame, text="Añadir Competidor", command=self.añadir_competidor, font=self.font, bg=ACCENT_COLOR, fg=FG_COLOR).pack(fill=tk.X)
         tk.Button(self.menu_frame, text="Listar Competidores", command=self.listar_competidores, font=self.font, bg=ACCENT_COLOR, fg=FG_COLOR).pack(fill=tk.X)
         tk.Button(self.menu_frame, text="Buscar Competidor", command=self.buscar_competidor, font=self.font, bg=ACCENT_COLOR, fg=FG_COLOR).pack(fill=tk.X)
-        tk.Button(self.menu_frame, text="Salir", command=self.root.quit, font=self.font, bg=ACCENT_COLOR, fg=FG_COLOR).pack(fill=tk.X)
+        tk.Button(self.menu_frame, text="Salir", command=self.root.destroy, font=self.font, bg=ACCENT_COLOR, fg=FG_COLOR).pack(fill=tk.X)
 
     def añadir_competidor(self):
         self.clear_frame()
@@ -220,7 +220,15 @@ class CompetidorMenu:
             widget.destroy()
 
 def main():
-    global app
+    global app, window_height,window_width,position_right,position_top
     root = tk.Tk()
+    window_width = 600
+    window_height = 400
+
+    screen_width = root.winfo_screenwidth()
+    screen_height = root.winfo_screenheight()
+
+    position_top = int(screen_height / 2 - window_height / 2)
+    position_right = int(screen_width / 2 - window_width / 2)
     app = CompetidorMenu(root)
-    root.mainloop()
+    #root.mainloop()
