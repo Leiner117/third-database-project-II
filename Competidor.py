@@ -49,33 +49,32 @@ class CompetidorMenu:
         tk.Label(frame, text="ID:", font=self.font, fg=FG_COLOR, bg=BG_COLOR).grid(row=0, column=0, padx=10, pady=10, sticky="e")
         id_entry = tk.Entry(frame, font=self.font, fg=FG_COLOR, bg=ACCENT_COLOR)
         id_entry.grid(row=0, column=1, padx=10, pady=10)
-        id_entry.insert(0, "Ingrese el ID del competidor")
+       
 
         tk.Label(frame, text="Nombre:", font=self.font, fg=FG_COLOR, bg=BG_COLOR).grid(row=1, column=0, padx=10, pady=10, sticky="e")
         nombre_entry = tk.Entry(frame, font=self.font, fg=FG_COLOR, bg=ACCENT_COLOR)
         nombre_entry.grid(row=1, column=1, padx=10, pady=10)
-        nombre_entry.insert(0, "Ingrese el nombre del competidor")
+        
 
         tk.Label(frame, text="Edad:", font=self.font, fg=FG_COLOR, bg=BG_COLOR).grid(row=2, column=0, padx=10, pady=10, sticky="e")
         edad_entry = tk.Entry(frame, font=self.font, fg=FG_COLOR, bg=ACCENT_COLOR)
         edad_entry.grid(row=2, column=1, padx=10, pady=10)
-        edad_entry.insert(0, "Ingrese la edad del competidor")
+        
 
         tk.Label(frame, text="Sexo:", font=self.font, fg=FG_COLOR, bg=BG_COLOR).grid(row=3, column=0, padx=10, pady=10, sticky="e")
         sexo_entry = tk.Entry(frame, font=self.font, fg=FG_COLOR, bg=ACCENT_COLOR)
         sexo_entry.grid(row=3, column=1, padx=10, pady=10)
-        sexo_entry.insert(0, "Ingrese el sexo del competidor")
+        
 
         tk.Label(frame, text="Carrera ID:", font=self.font, fg=FG_COLOR, bg=BG_COLOR).grid(row=4, column=0, padx=10, pady=10, sticky="e")
         carrera_id_entry = tk.Entry(frame, font=self.font, fg=FG_COLOR, bg=ACCENT_COLOR)
         carrera_id_entry.grid(row=4, column=1, padx=10, pady=10)
-        carrera_id_entry.insert(0, "Ingrese el ID de la carrera")
+        
 
         tk.Label(frame, text="Condición:", font=self.font, fg=FG_COLOR, bg=BG_COLOR).grid(row=5, column=0, padx=10, pady=10, sticky="e")
         condicion_entry = tk.Entry(frame, font=self.font, fg=FG_COLOR, bg=ACCENT_COLOR)
         condicion_entry.grid(row=5, column=1, padx=10, pady=10)
-        condicion_entry.insert(0, "Ingrese la condición del competidor")
-
+        
         def guardar_competidor():
             id = int(id_entry.get())
             nombre = nombre_entry.get()
@@ -84,11 +83,10 @@ class CompetidorMenu:
             carrera_id = int(carrera_id_entry.get())
             condicion = condicion_entry.get()
 
-            if add_competidor(id, nombre, edad, sexo, carrera_id, condicion):
-                messagebox.showinfo("Éxito", "Competidor añadido exitosamente")
-                self.mostrar_menu()
-            else:
-                messagebox.showerror("Error", "No se pudo añadir el competidor")
+            add_competidor(id, nombre, edad, sexo, carrera_id, condicion)
+            messagebox.showinfo("Éxito", "Competidor añadido exitosamente")
+            self.mostrar_menu()
+        
 
         tk.Button(frame, text="Guardar", command=guardar_competidor, font=self.font, bg=ACCENT_COLOR, fg=FG_COLOR).grid(row=6, column=0, columnspan=2, padx=10, pady=10)
         tk.Button(frame, text="Cancelar", command=self.mostrar_menu, font=self.font, bg=ACCENT_COLOR, fg=FG_COLOR).grid(row=7, column=0, columnspan=2, padx=10, pady=10)
@@ -107,7 +105,7 @@ class CompetidorMenu:
             tree.heading("Condición", text="Condición")
 
             for competidor in competidores:
-                tree.insert("", "end", values=(competidor.id, competidor.nombre, competidor.edad, competidor.sexo, competidor.carrera_id, competidor.condicion))
+                tree.insert("", "end", values=(competidor[0], competidor[1], competidor[2], competidor[3], competidor[4], competidor[5]))
 
             tree.pack(pady=10)
 
@@ -120,7 +118,7 @@ class CompetidorMenu:
                     item = tree.item(seleccion)
                     values = item['values']
                     id_seleccionado = values[0]
-                    competidor_seleccionado = next((c for c in competidores if c.id == id_seleccionado), None)
+                    competidor_seleccionado = next((c for c in competidores if c[0] == id_seleccionado), None)
                     if competidor_seleccionado:
                         self.editar_competidor(competidor_seleccionado)
 
@@ -133,7 +131,7 @@ class CompetidorMenu:
                     item = tree.item(seleccion)
                     values = item['values']
                     id_seleccionado = values[0]
-                    competidor_seleccionado = next((c for c in competidores if c.id == id_seleccionado), None)
+                    competidor_seleccionado = next((c for c in competidores if c[0] == id_seleccionado), None)
                     if competidor_seleccionado:
                         self.borrar_competidor(competidor_seleccionado)
 
@@ -155,7 +153,7 @@ class CompetidorMenu:
 
         def buscar():
             id = int(id_entry.get())
-            competidor = next((c for c in get_competidores() if c.id == id), None)
+            competidor = next((c for c in get_competidores() if c[0] == id), None)
             if competidor:
                 self.editar_competidor(competidor)
             else:
@@ -173,46 +171,34 @@ class CompetidorMenu:
         tk.Label(frame, text="ID:", font=self.font, fg=FG_COLOR, bg=BG_COLOR).grid(row=0, column=0, padx=10, pady=10, sticky="e")
         id_entry = tk.Entry(frame, font=self.font, fg=FG_COLOR, bg=ACCENT_COLOR)
         id_entry.grid(row=0, column=1, padx=10, pady=10)
-        id_entry.insert(0, competidor.id)
+        id_entry.insert(0, competidor[0])
         id_entry.config(state='readonly')
 
         tk.Label(frame, text="Nombre:", font=self.font, fg=FG_COLOR, bg=BG_COLOR).grid(row=1, column=0, padx=10, pady=10, sticky="e")
         nombre_entry = tk.Entry(frame, font=self.font, fg=FG_COLOR, bg=ACCENT_COLOR)
         nombre_entry.grid(row=1, column=1, padx=10, pady=10)
-        nombre_entry.insert(0, competidor.nombre)
+        nombre_entry.insert(0, competidor[1])
 
         tk.Label(frame, text="Edad:", font=self.font, fg=FG_COLOR, bg=BG_COLOR).grid(row=2, column=0, padx=10, pady=10, sticky="e")
         edad_entry = tk.Entry(frame, font=self.font, fg=FG_COLOR, bg=ACCENT_COLOR)
         edad_entry.grid(row=2, column=1, padx=10, pady=10)
-        edad_entry.insert(0, competidor.edad)
+        edad_entry.insert(0, competidor[2])
 
         tk.Label(frame, text="Sexo:", font=self.font, fg=FG_COLOR, bg=BG_COLOR).grid(row=3, column=0, padx=10, pady=10, sticky="e")
         sexo_entry = tk.Entry(frame, font=self.font, fg=FG_COLOR, bg=ACCENT_COLOR)
         sexo_entry.grid(row=3, column=1, padx=10, pady=10)
-        sexo_entry.insert(0, competidor.sexo)
-
-        tk.Label(frame, text="Carrera ID:", font=self.font, fg=FG_COLOR, bg=BG_COLOR).grid(row=4, column=0, padx=10, pady=10, sticky="e")
-        carrera_id_entry = tk.Entry(frame, font=self.font, fg=FG_COLOR, bg=ACCENT_COLOR)
-        carrera_id_entry.grid(row=4, column=1, padx=10, pady=10)
-        carrera_id_entry.insert(0, competidor.carrera_id)
-
-        tk.Label(frame, text="Condición:", font=self.font, fg=FG_COLOR, bg=BG_COLOR).grid(row=5, column=0, padx=10, pady=10, sticky="e")
-        condicion_entry = tk.Entry(frame, font=self.font, fg=FG_COLOR, bg=ACCENT_COLOR)
-        condicion_entry.grid(row=5, column=1, padx=10, pady=10)
-        condicion_entry.insert(0, competidor.condicion)
+        sexo_entry.insert(0, competidor[3])
 
         def guardar_cambios():
-            competidor.nombre = nombre_entry.get()
-            competidor.edad = int(edad_entry.get())
-            competidor.sexo = sexo_entry.get()
-            competidor.carrera_id = int(carrera_id_entry.get())
-            competidor.condicion = condicion_entry.get()
-
-            if update_competidor(competidor):
-                messagebox.showinfo("Éxito", "Competidor actualizado exitosamente")
-                self.mostrar_menu()
-            else:
-                messagebox.showerror("Error", "No se pudo actualizar el competidor")
+            
+            id_competidor=id_entry.get()
+            nombre_competidor = nombre_entry.get()
+            edad_competidor = int(edad_entry.get())
+            genero_competidor = sexo_entry.get()
+            update_competidor(id_competidor,nombre_competidor,edad_competidor,genero_competidor)
+            messagebox.showinfo("Éxito", "Competidor actualizado exitosamente")
+            self.mostrar_menu()
+           
 
         tk.Button(frame, text="Guardar", command=guardar_cambios, font=self.font, bg=ACCENT_COLOR, fg=FG_COLOR).grid(row=6, column=0, columnspan=2, padx=10, pady=10)
         tk.Button(frame, text="Cancelar", command=self.mostrar_menu, font=self.font, bg=ACCENT_COLOR, fg=FG_COLOR).grid(row=7, column=0, columnspan=2, padx=10, pady=10)
@@ -233,7 +219,8 @@ class CompetidorMenu:
         for widget in self.root.winfo_children():
             widget.destroy()
 
-if __name__ == "__main__":
+def main():
+    global app
     root = tk.Tk()
     app = CompetidorMenu(root)
     root.mainloop()
