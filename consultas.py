@@ -4,8 +4,7 @@ import backend
 
 def actualizar_tiempos(orden=None):
     Carrera_seleccionado = Carreras_combobox.get()
-    Carrera_tiempos = backend.get_participantes_tiempos(Carrera_seleccionado)
-    print("Que trae: ", Carrera_tiempos)
+    Carrera_tiempos = backend.get_consultaParticipantes_tiempos(Carrera_seleccionado)
     # Limpiar la tabla antes de actualizarla
     limpiar_tabla()
     # Obtener los tiempos correspondientes al corredor seleccionado
