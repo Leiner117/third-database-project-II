@@ -11,9 +11,25 @@ def get_competidores():
 
 # Recuperar todas las carreras de la base de datos
 def get_carreras():
-    cursor.execute("SELECT * FROM CARRERAS")
+    cursor.execute("""
+        SELECT 
+            ID, 
+            Nombre, 
+            CASE 
+                WHEN TO_CHAR(Fecha, 'YYYY') = '0000' THEN NULL 
+                ELSE TO_CHAR(Fecha, 'DD-MM-YYYY HH24:MI') 
+            END AS Fecha, 
+            Maximo_Competidores, 
+            Lugar, 
+            CASE 
+                WHEN TO_CHAR(Hora_Salida, 'YYYY') = '0000' THEN NULL 
+                ELSE TO_CHAR(Hora_Salida, 'DD-MM-YYYY HH24:MI') 
+            END AS Hora_Salida 
+        FROM CARRERAS
+        WHERE Fecha >= CURRENT_DATE
+        ORDER BY Fecha DESC
+    """)
     return cursor.fetchall()
-
 #Recuperar todos los trayectos de la base de datos
 def get_trayectos():
     cursor.execute("SELECT * FROM TRAYECTOS")
@@ -170,3 +186,17 @@ def get_participantes_tiempos(id_carrera):
         tiempos = cursor_local.fetchall()
         participante.append(tiempos)
     return participantes
+
+# obtener carrera con id
+def get_carrera_by_id(id_carrera):
+    cursor.execute("SELECT * FROM CARRERAS WHERE ID = :1", (id_carrera,))
+    return cursor.fetchone()
+
+def get_times_by_participant(id_competidor):
+    cursor_local.execute("SELECT * FROM TIEMPOS_PARTICIPANTES WHERE id_competidor = %s", (id_competidor,))
+    return cursor_local.fetchall()
+
+#obtener la lista de participantes del nodo local
+def get_participantes():
+    cursor_local.execute("SELECT * FROM PARTICIPANTES")
+    return cursor_local.fetchall()

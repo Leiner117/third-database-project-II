@@ -3,14 +3,18 @@ from tkinter import messagebox
 import Competidor
 import carreras
 import tiempos
+import Participante
+import tiempos
 # Funciones de los botones
 def registro_competidores():
     Competidor.main()
 
 def gestion_carreras():
     carreras.main()
+def registro_participantes():
+    Participante.main()
 
-def registro_participantes_tiempos():
+def registro_tiempos():
     tiempos.main()
 
 def consultas_reportes():
@@ -45,8 +49,8 @@ button_width = 25  # Ajusta este valor según sea necesario
 # Crear los botones
 btn_registro_competidores = tk.Button(root, text="Registro de Competidores", command=registro_competidores, font=button_font, width=button_width)
 btn_gestion_carreras = tk.Button(root, text="Gestión de Carreras", command=gestion_carreras, font=button_font, width=button_width)
-btn_registro_participantes = tk.Button(root, text="Registro de Participantes", command=registro_participantes_tiempos, font=button_font, width=button_width)
-btn_registro_tiempos = tk.Button(root, text="Registro de Tiempos", command=registro_participantes_tiempos, font=button_font, width=button_width)
+btn_registro_participantes = tk.Button(root, text="Registro de Participantes", command=registro_participantes, font=button_font, width=button_width)
+btn_registro_tiempos = tk.Button(root, text="Registro de Tiempos", command=registro_tiempos, font=button_font, width=button_width)
 btn_consultas_reportes = tk.Button(root, text="Consultas y Reportes", command=consultas_reportes, font=button_font, width=button_width)
 btn_salir = tk.Button(root, text="Salir", command=salir, font=button_font, width=button_width)
 
