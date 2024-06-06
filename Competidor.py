@@ -220,7 +220,7 @@ class CompetidorMenu:
             widget.destroy()
 
 def main():
-    global app, window_height,window_width,position_right,position_top
+    global window_height,window_width,position_right,position_top
     root = tk.Tk()
     window_width = 600
     window_height = 400
@@ -231,4 +231,3 @@ def main():
     position_top = int(screen_height / 2 - window_height / 2)
     position_right = int(screen_width / 2 - window_width / 2)
     app = CompetidorMenu(root)
-    #root.mainloop()

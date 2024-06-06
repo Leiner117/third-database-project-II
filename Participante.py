@@ -22,7 +22,7 @@ class ParticipanteMenu:
     def __init__(self, root):
         self.root = root
         self.root.title("Menú de Participantes")
-        self.root.geometry("600x400")
+        self.root.geometry(f'{window_width}x{window_height}+{position_right}+{position_top}')
         self.root.configure(bg=BG_COLOR)
 
         self.font = font.Font(size=12)
@@ -32,7 +32,7 @@ class ParticipanteMenu:
         tk.Button(self.menu_frame, text="Añadir Participante", command=self.añadir_participante, font=self.font, bg=ACCENT_COLOR, fg=FG_COLOR).pack(fill=tk.X, padx=20, pady=10)
         tk.Button(self.menu_frame, text="Listar Participantes", command=self.listar_participantes, font=self.font, bg=ACCENT_COLOR, fg=FG_COLOR).pack(fill=tk.X, padx=20, pady=10)
         tk.Button(self.menu_frame, text="Buscar Participante", command=self.buscar_participante, font=self.font, bg=ACCENT_COLOR, fg=FG_COLOR).pack(fill=tk.X, padx=20, pady=10)
-        tk.Button(self.menu_frame, text="Salir", command=self.root.quit, font=self.font, bg=ACCENT_COLOR, fg=FG_COLOR).pack(fill=tk.X, padx=20, pady=10)
+        tk.Button(self.menu_frame, text="Salir", command=self.root.destroy, font=self.font, bg=ACCENT_COLOR, fg=FG_COLOR).pack(fill=tk.X, padx=20, pady=10)
 
     def obtener_participantes_desde_bd(self):
         participantes_bd = get_participantes()
@@ -204,7 +204,16 @@ class ParticipanteMenu:
         for widget in self.root.winfo_children():
             widget.destroy()
 
-if __name__ == "__main__":
+def main():
+    global window_height,window_width,position_right,position_top
     root = tk.Tk()
+    window_width = 600
+    window_height = 400
+
+    screen_width = root.winfo_screenwidth()
+    screen_height = root.winfo_screenheight()
+
+    position_top = int(screen_height / 2 - window_height / 2)
+    position_right = int(screen_width / 2 - window_width / 2)
     app = ParticipanteMenu(root)
     root.mainloop()
