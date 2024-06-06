@@ -4,6 +4,7 @@ import Competidor
 import carreras
 import tiempos
 import consultas
+import Participante
 # Funciones de los botones
 def registro_competidores():
     Competidor.main()
