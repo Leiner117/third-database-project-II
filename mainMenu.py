@@ -3,8 +3,7 @@ from tkinter import messagebox
 import Competidor
 import carreras
 import tiempos
-import Participante
-import tiempos
+import consultas
 # Funciones de los botones
 def registro_competidores():
     Competidor.main()
@@ -18,7 +17,7 @@ def registro_tiempos():
     tiempos.main()
 
 def consultas_reportes():
-    messagebox.showinfo("Consultas y Reportes", "Función de Consultas y Reportes")
+    consultas.main()
 
 def salir():
     root.destroy()

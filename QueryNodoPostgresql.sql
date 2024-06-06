@@ -1,9 +1,11 @@
 ------------------------------Participantes---------------------------------------------
 create table participantes(
-	id_carrera int primary key,
-	id_competidor int not null unique,
+	id serial primary key,
+	id_carrera int not null,
+	id_competidor int not null,
 	dorsal_participante varchar(20) not null
 )
+select * from participantes
 CREATE OR REPLACE procedure insertar_participante(
     in p_id_carrera INT,
     in p_id_competidor INT,
@@ -15,8 +17,9 @@ BEGIN
     VALUES (p_id_carrera, p_id_competidor, p_dorsal_participante);
 END;
 $$ LANGUAGE plpgsql;
-CALL insertar_participante(1, 01, 'DOR1234');
-
+CALL insertar_participante(1, 02, 'DROCO');
+CALL insertar_participante(2, 01, 'DRRABC');
+CALL insertar_participante(2, 02, 'DROCO');
 CREATE OR REPLACE procedure obtener_participantesPorCarrera(
     IN p_id_carrera INT,
     OUT result_set REFCURSOR
@@ -46,7 +49,7 @@ BEGIN
     LOOP
         FETCH NEXT FROM ref_cursor INTO rec;
         EXIT WHEN NOT FOUND;
-        -- Procesa cada fila obtenida
+        -- Procesa cada fila obtenida aquí
         RAISE NOTICE 'Carrera: %, Competidor: %, Dorsal: %', rec.id_carrera, rec.id_competidor, rec.dorsal_participante;
     END LOOP;
 
@@ -70,11 +73,11 @@ $$ LANGUAGE plpgsql;
 CALL modificar_participante(1, 01, 'DOR5678');
 --------------------------------------Tiempos Participantes---------------------------------------------
 create table tiempos_participantes(
-	id_carrera int primary key,
+	id serial primary key,
+	id_carrera int not null,
 	id_trayecto int not null,
 	id_competidor int not null,
-	tiempo varchar(30) not null,
-	foreign key (id_competidor) references participantes(id_competidor)
+	tiempo varchar(30) not null
 )
 
 CREATE OR REPLACE procedure insertar_tiempoParticipante(
@@ -89,8 +92,10 @@ BEGIN
     VALUES (p_id_carrera, p_id_trayecto, p_id_competidor, p_tiempo);
 END;
 $$ LANGUAGE plpgsql;
-CALL insertar_tiempoParticipante(1, 10, 01, '01:30:00');
-
+select * from tiempos_participantes
+CALL insertar_tiempoParticipante(1, 1, 02, '01:37:00');
+CALL insertar_tiempoParticipante(2, 1, 01, '01:38:00');
+CALL insertar_tiempoParticipante(2, 1, 02, '01:33:00');
 CREATE OR REPLACE procedure obtener_tiempo_participantes(
     IN p_id_carrera INT,
     IN p_id_trayecto INT,
@@ -123,14 +128,14 @@ BEGIN
     LOOP
         FETCH NEXT FROM ref_cursor INTO rec;
         EXIT WHEN NOT FOUND;
-        -- Procesa cada fila obtenida
+        -- Procesa cada fila obtenida aquí
         RAISE NOTICE 'Carrera: %, Trayecto: %, Competidor: %, Tiempo: %', rec.id_carrera, rec.id_trayecto, rec.id_competidor, rec.tiempo;
     END LOOP;
 
     -- Cierra el cursor
     CLOSE ref_cursor;
 END $$;
-CALL procesar_tiempos_participantes(1, 10);  -- se pasa #id carrera, #id trayecto 
+CALL procesar_tiempos_participantes(1, 1);  -- se pasa #id carrera, #id trayecto 
 
 CREATE OR REPLACE procedure actualizar_tiempo_participante(
     in p_id_carrera INT,
