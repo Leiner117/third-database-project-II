@@ -38,10 +38,25 @@ class ParticipanteMenu:
         participantes_bd = get_participantes()
         participantes = []
         for p in participantes_bd:
-            id, competidor_id, carrera_id, dorsal = p
+            id, carrera_id,competidor_id ,dorsal = p
             tiempos = get_times_by_participant(competidor_id)
-            tiempo = tiempos[0][3] if tiempos else None
-            participantes.append(Participante(id, competidor_id, tiempo, carrera_id, dorsal))
+            # Creamos un diccionario para almacenar los tiempos por trayecto
+            tiempos_por_trayecto = {}
+            for tiempo in tiempos:
+                _, id_carrera_tiempo, id_trayecto, _, tiempo_trayecto = tiempo
+                # Si el tiempo corresponde a la carrera y trayecto actual
+                if id_carrera_tiempo == carrera_id:
+                    if id_trayecto not in tiempos_por_trayecto:
+                        tiempos_por_trayecto[id_trayecto] = tiempo_trayecto
+                    else:
+                        # Si ya hay un tiempo registrado para este trayecto, actualizamos solo si el nuevo tiempo es menor
+                        if tiempo_trayecto < tiempos_por_trayecto[id_trayecto]:
+                            tiempos_por_trayecto[id_trayecto] = tiempo_trayecto
+            
+            # Agregamos los tiempos obtenidos a la lista de participantes
+            for id_trayecto, tiempo_trayecto in tiempos_por_trayecto.items():
+                participantes.append(Participante(id, competidor_id, tiempo_trayecto, carrera_id, dorsal))
+
         return participantes
 
     def añadir_participante(self):
@@ -93,12 +108,15 @@ class ParticipanteMenu:
             tree.heading("Tiempo", text="Tiempo")
             tree.heading("Carrera ID", text="Carrera ID")
             tree.heading("Dorsal", text="Dorsal")
+            
+            # Configurando el ancho de las columnas para ajustarse automáticamente
+            for column in tree["columns"]:
+                tree.column(column, stretch=True)
 
             for participante in self.participantes:
                 tree.insert("", "end", values=(participante.id, participante.competidor_id, participante.tiempo, participante.carrera_id, participante.dorsal))
-
+            
             tree.pack(pady=10)
-
             buttons_frame = tk.Frame(self.root, bg=BG_COLOR)
             buttons_frame.pack()
 
@@ -111,25 +129,49 @@ class ParticipanteMenu:
     def buscar_participante(self):
         self.clear_frame()
         self.participantes = self.obtener_participantes_desde_bd()
+        # Crear un diccionario donde la clave es el ID del participante y el valor es una lista de sus participaciones
+        participantes_dict = {}
+        for participante in self.participantes:
+            if participante.competidor_id not in participantes_dict:
+                participantes_dict[participante.competidor_id] = []
+            participantes_dict[participante.competidor_id].append(participante)
 
-        competidor_ids = [participante.competidor_id for participante in self.participantes]
-        selected_id = tk.StringVar()
-        competidor_combobox = ttk.Combobox(self.root, textvariable=selected_id, values=competidor_ids, font=self.font)
+        competidor_ids = [str(id) for id in participantes_dict.keys()]
+        selected_id = None
+        competidor_combobox = ttk.Combobox(self.root, values=competidor_ids, font=self.font)
         competidor_combobox.pack(pady=10)
-
+        def on_select(event):
+            nonlocal selected_id
+            selected_id = competidor_combobox.get()
+        competidor_combobox.bind("<<ComboboxSelected>>", on_select)
+        tree = ttk.Treeview(self.root, columns=("ID", "Competidor ID", "Tiempo", "Carrera ID", "Dorsal"), show="headings", height=len(self.participantes))
+        tree.heading("ID", text="ID")
+        tree.heading("Competidor ID", text="Competidor ID")
+        tree.heading("Tiempo", text="Tiempo")
+        tree.heading("Carrera ID", text="Carrera ID")
+        tree.heading("Dorsal", text="Dorsal")
+        tree.pack(pady=10)
+        def mostrar_info(participante):
+            tree.insert("", "end", values=(participante.id, participante.competidor_id, participante.tiempo, participante.carrera_id, participante.dorsal))            
+       
         def buscar():
-            competidor_id = int(selected_id.get())
-            encontrado = False
-            for participante in self.participantes:
-                if participante.competidor_id == competidor_id:
-                    messagebox.showinfo("Participante Encontrado", str(participante))
+            # Restablecer el Treeview eliminando todas las entradas actuales
+            for item in tree.get_children():
+                tree.delete(item)
+            print("QUE TRAE: ",selected_id)
+            if selected_id:
+                encontrado = False
+                if int(selected_id) in participantes_dict:
+                    for participante in participantes_dict[int(selected_id)]:
+                        mostrar_info(participante)
                     encontrado = True
-                    break
 
-            if not encontrado:
-                messagebox.showinfo("No Encontrado", "Participante no encontrado")
-            self.mostrar_menu()
-
+                if not encontrado:
+                    messagebox.showinfo("No Encontrado", "Participante no encontrado")
+                    self.mostrar_menu()
+            else:
+                messagebox.showinfo("Error", "Seleccione un ID del participante antes de buscar.")
+                self.buscar_participante()
         tk.Button(self.root, text="Buscar", command=buscar, font=self.font, bg=ACCENT_COLOR, fg=FG_COLOR).pack(pady=5)
         tk.Button(self.root, text="Volver", command=self.mostrar_menu, font=self.font, bg=ACCENT_COLOR, fg=FG_COLOR).pack(pady=5)
 
@@ -141,7 +183,7 @@ class ParticipanteMenu:
         
         edit_window = tk.Toplevel(self.root)
         edit_window.title("Editar Participante")
-        edit_window.geometry("300x300")
+        edit_window.geometry("380x300")
         edit_window.configure(bg=BG_COLOR)
         
         participante_values = tree.item(selected_item, "values")
@@ -207,8 +249,8 @@ class ParticipanteMenu:
 def main():
     global window_height,window_width,position_right,position_top
     root = tk.Tk()
-    window_width = 600
-    window_height = 400
+    window_width = 1020
+    window_height = 440
 
     screen_width = root.winfo_screenwidth()
     screen_height = root.winfo_screenheight()

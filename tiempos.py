@@ -47,8 +47,20 @@ def main():
 
     root = tk.Tk()
     root.title("Agregar tiempos")
-    root.geometry("854x480")
+# Establecer el tamaño de la ventana
+    window_width = 854
+    window_height = 480
 
+    # Obtener el tamaño de la pantalla
+    screen_width = root.winfo_screenwidth()
+    screen_height = root.winfo_screenheight()
+    # Calcular la posición centrada
+    position_top = int(screen_height / 2 - window_height / 2)
+    position_right = int(screen_width / 2 - window_width / 2)
+
+    # Establecer la geometría de la ventana
+    root.geometry(f'{window_width}x{window_height}+{position_right}+{position_top}')
+    
     participantes = get_participantes()
     ids_competidores = [p[1] for p in participantes]
 

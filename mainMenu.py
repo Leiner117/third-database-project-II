@@ -11,6 +11,7 @@ def registro_competidores():
 
 def gestion_carreras():
     carreras.main()
+    
 def registro_participantes():
     Participante.main()
 

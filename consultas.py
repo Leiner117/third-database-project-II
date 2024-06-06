@@ -35,7 +35,18 @@ def consultarCarreras():
     global rootConsulta, Carreras_combobox, tiempos_table, Carrera_tiempos
     rootConsulta = tk.Tk()
     rootConsulta.title("Tiempos por carreras")
-    rootConsulta.geometry("854x480")
+     # Establecer el tamaño de la ventana
+    window_width = 854
+    window_height = 480
+    # Obtener el tamaño de la pantalla
+    screen_width = rootConsulta.winfo_screenwidth()
+    screen_height = rootConsulta.winfo_screenheight()
+    # Calcular la posición centrada
+    position_top = int(screen_height / 2 - window_height / 2)
+    position_right = int(screen_width / 2 - window_width / 2)
+    # Establecer la geometría de la ventana
+    rootConsulta.geometry(f'{window_width}x{window_height}+{position_right}+{position_top}')
+    
     cursor_local= backend.get_cursor()
     # Obtener la lista de carreras desde la base de datos
     cursor_local.execute("SELECT DISTINCT id_carrera FROM PARTICIPANTES")
@@ -102,7 +113,18 @@ def consultarTrayectoCarrera():
     global rootTrayectoCarrera, Carreras_combobox, tiempos_table
     rootTrayectoCarrera = tk.Tk()
     rootTrayectoCarrera.title("Tiempos por trayecto de carrera")
-    rootTrayectoCarrera.geometry("854x480")
+    # Establecer el tamaño de la ventana
+    window_width = 854
+    window_height = 480
+    # Obtener el tamaño de la pantalla
+    screen_width = rootTrayectoCarrera.winfo_screenwidth()
+    screen_height = rootTrayectoCarrera.winfo_screenheight()
+    # Calcular la posición centrada
+    position_top = int(screen_height / 2 - window_height / 2)
+    position_right = int(screen_width / 2 - window_width / 2)
+    # Establecer la geometría de la ventana
+    rootTrayectoCarrera.geometry(f'{window_width}x{window_height}+{position_right}+{position_top}')
+    
     cursor_local= backend.get_cursor()
     # Obtener la lista de carreras y trayectos desde la base de datos
     cursor_local.execute("SELECT DISTINCT id_carrera, id_trayecto FROM tiempos_participantes")
