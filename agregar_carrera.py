@@ -16,11 +16,11 @@ def main():
             return
 
         try:
-            datetime.strptime(fecha, "%Y-%m-%d")
+            datetime.strptime(fecha, "%d-%m-%Y")
             datetime.strptime(hora_salida, "%H:%M")
             int(max_competidores)
         except ValueError:
-            messagebox.showwarning("Datos inválidos", "Por favor, ingrese datos válidos (Fecha: YYYY-MM-DD, Hora: HH:MM, Máximo Competidores: Número)")
+            messagebox.showwarning("Datos inválidos", "Por favor, ingrese datos válidos (Fecha: DD-MM-YYYY, Hora: HH:MM, Máximo Competidores: Número)")
             return
         agregar_carrera_func(nombre, fecha, max_competidores, lugar, hora_salida)
         messagebox.showinfo("Registro exitoso", f"Carrera '{nombre}' registrada correctamente")
@@ -33,7 +33,7 @@ def main():
     # Etiquetas y entradas para los campos de la carrera
     labels = [
         tk.Label(root, text="Nombre:", font=("Arial", 14)),
-        tk.Label(root, text="Fecha (YYYY-MM-DD):", font=("Arial", 14)),
+        tk.Label(root, text="Fecha (DD-MM-YYYY):", font=("Arial", 14)),
         tk.Label(root, text="Máximo Competidores:", font=("Arial", 14)),
         tk.Label(root, text="Lugar:", font=("Arial", 14)),
         tk.Label(root, text="Hora de Salida (HH:MM):", font=("Arial", 14))
