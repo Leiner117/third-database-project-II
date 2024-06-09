@@ -46,11 +46,6 @@ class CompetidorMenu:
         frame = tk.Frame(self.root, bg=BG_COLOR)
         frame.pack(pady=20)
 
-        tk.Label(frame, text="ID:", font=self.font, fg=FG_COLOR, bg=BG_COLOR).grid(row=0, column=0, padx=10, pady=10, sticky="e")
-        id_entry = tk.Entry(frame, font=self.font, fg=FG_COLOR, bg=ACCENT_COLOR)
-        id_entry.grid(row=0, column=1, padx=10, pady=10)
-       
-
         tk.Label(frame, text="Nombre:", font=self.font, fg=FG_COLOR, bg=BG_COLOR).grid(row=1, column=0, padx=10, pady=10, sticky="e")
         nombre_entry = tk.Entry(frame, font=self.font, fg=FG_COLOR, bg=ACCENT_COLOR)
         nombre_entry.grid(row=1, column=1, padx=10, pady=10)
@@ -64,26 +59,12 @@ class CompetidorMenu:
         tk.Label(frame, text="Sexo:", font=self.font, fg=FG_COLOR, bg=BG_COLOR).grid(row=3, column=0, padx=10, pady=10, sticky="e")
         sexo_entry = tk.Entry(frame, font=self.font, fg=FG_COLOR, bg=ACCENT_COLOR)
         sexo_entry.grid(row=3, column=1, padx=10, pady=10)
-        
-
-        tk.Label(frame, text="Carrera ID:", font=self.font, fg=FG_COLOR, bg=BG_COLOR).grid(row=4, column=0, padx=10, pady=10, sticky="e")
-        carrera_id_entry = tk.Entry(frame, font=self.font, fg=FG_COLOR, bg=ACCENT_COLOR)
-        carrera_id_entry.grid(row=4, column=1, padx=10, pady=10)
-        
-
-        tk.Label(frame, text="Condición:", font=self.font, fg=FG_COLOR, bg=BG_COLOR).grid(row=5, column=0, padx=10, pady=10, sticky="e")
-        condicion_entry = tk.Entry(frame, font=self.font, fg=FG_COLOR, bg=ACCENT_COLOR)
-        condicion_entry.grid(row=5, column=1, padx=10, pady=10)
-        
+            
         def guardar_competidor():
-            id = int(id_entry.get())
             nombre = nombre_entry.get()
             edad = int(edad_entry.get())
             sexo = sexo_entry.get()
-            carrera_id = int(carrera_id_entry.get())
-            condicion = condicion_entry.get()
-
-            add_competidor(id, nombre, edad, sexo, carrera_id, condicion)
+            add_competidor(nombre, edad, sexo)
             messagebox.showinfo("Éxito", "Competidor añadido exitosamente")
             self.mostrar_menu()
         
@@ -222,8 +203,8 @@ class CompetidorMenu:
 def main():
     global window_height,window_width,position_right,position_top
     root = tk.Tk()
-    window_width = 600
-    window_height = 400
+    window_width = 1220
+    window_height = 440
 
     screen_width = root.winfo_screenwidth()
     screen_height = root.winfo_screenheight()

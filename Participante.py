@@ -69,10 +69,6 @@ class ParticipanteMenu:
         competidor_id_entry = tk.Entry(frame, font=self.font, fg=FG_COLOR, bg=ACCENT_COLOR)
         competidor_id_entry.grid(row=0, column=1, padx=10, pady=10)
 
-        tk.Label(frame, text="Tiempo:", font=self.font, fg=FG_COLOR, bg=BG_COLOR).grid(row=1, column=0, padx=10, pady=10, sticky="e")
-        tiempo_entry = tk.Entry(frame, font=self.font, fg=FG_COLOR, bg=ACCENT_COLOR)
-        tiempo_entry.grid(row=1, column=1, padx=10, pady=10)
-
         tk.Label(frame, text="ID Carrera:", font=self.font, fg=FG_COLOR, bg=BG_COLOR).grid(row=2, column=0, padx=10, pady=10, sticky="e")
         carrera_id_entry = tk.Entry(frame, font=self.font, fg=FG_COLOR, bg=ACCENT_COLOR)
         carrera_id_entry.grid(row=2, column=1, padx=10, pady=10)
@@ -83,9 +79,8 @@ class ParticipanteMenu:
 
         def guardar_participante():
             competidor_id = int(competidor_id_entry.get())
-            tiempo = tiempo_entry.get()
             carrera_id = int(carrera_id_entry.get())
-            dorsal = int(dorsal_entry.get())
+            dorsal = dorsal_entry.get()
             add_participante(carrera_id, competidor_id, dorsal)
             self.participantes = self.obtener_participantes_desde_bd()
             messagebox.showinfo("Éxito", "Participante añadido correctamente")
