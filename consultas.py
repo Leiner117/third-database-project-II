@@ -4,21 +4,17 @@ import backend
 
 def actualizar_tiempos(orden=None):
     Carrera_seleccionado = Carreras_combobox.get()
-    Carrera_tiempos = backend.get_consultaParticipantes_tiempos(Carrera_seleccionado)
+    Carrera_tiempos = backend.get_consultaParticipantes_tiempos(int(Carrera_seleccionado))
     # Limpiar la tabla antes de actualizarla
     limpiar_tabla()
-    # Obtener los tiempos correspondientes al corredor seleccionado
-    tiempos = Carrera_tiempos.get(Carrera_seleccionado, [])
-    # Obtener los participantes y sus tiempos
-    for participante_id, tiempos in Carrera_tiempos.items():
-        # Ordenar los tiempos si se especifica el orden
-        if orden == "ascendente":
-            tiempos = sorted(tiempos)
-        elif orden == "descendente":
-            tiempos = sorted(tiempos, reverse=True)
-        # Insertar los tiempos en la tabla
-        for tiempo in tiempos:
-            tiempos_table.insert("", "end", values=(Carrera_seleccionado, participante_id, tiempo))
+    # Ordenar los tiempos si se especifica el orden
+    if orden == "ascendente":
+        Carrera_tiempos = sorted(Carrera_tiempos, key=lambda x: x[2])
+    elif orden == "descendente":
+        Carrera_tiempos = sorted(Carrera_tiempos, key=lambda x: x[2], reverse=True)
+    # Insertar los tiempos en la tabla
+    for tiempo in Carrera_tiempos:
+        tiempos_table.insert("", "end", values=(Carrera_seleccionado,tiempo[0], tiempo[1], tiempo[2]))
 
 def limpiar_tabla():
     # Limpiar la tabla eliminando todas las filas
@@ -63,9 +59,10 @@ def consultarCarreras():
     Carreras_combobox.bind("<<ComboboxSelected>>", lambda event: actualizar_tiempos())
 
     # Tabla para mostrar los tiempos
-    tiempos_table = ttk.Treeview(rootConsulta, columns=("Carrera", "Participante", "Tiempo"), show="headings")
+    tiempos_table = ttk.Treeview(rootConsulta, columns=("Carrera", "Participante","Trayecto" ,"Tiempo"), show="headings")
     tiempos_table.heading("Carrera", text="id_Carrera")
     tiempos_table.heading("Participante", text="id_Participante")
+    tiempos_table.heading("Trayecto", text="id_Trayecto")
     tiempos_table.heading("Tiempo", text="Tiempo")
     tiempos_table.grid(row=1, column=0, columnspan=2, padx=10, pady=5, sticky="nsew")
 

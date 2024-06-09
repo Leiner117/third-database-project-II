@@ -209,20 +209,12 @@ def get_cursor():
 def get_consultaParticipantes_tiempos(id_carrera):
     # Obtener todos los participantes de la carrera
     cursor_local.execute("""
-        SELECT p.id_competidor, t.tiempo
-        FROM PARTICIPANTES p
-        JOIN tiempos_participantes t ON p.id_competidor = t.id_competidor
-        WHERE p.id_carrera = %s
+        SELECT t.id_competidor,t.id_trayecto ,t.tiempo
+        FROM tiempos_participantes t
+        WHERE t.id_carrera = %s
     """, (id_carrera,))
-    tiempos_participantes = cursor_local.fetchall()
-    
-    resultados = {}
-    for id_competidor, tiempo in tiempos_participantes:
-        if id_competidor not in resultados:
-            resultados[id_competidor] = []
-        resultados[id_competidor].append(tiempo)
-    
-    return resultados 
+    tiempos_participantes = cursor_local.fetchall() 
+    return tiempos_participantes 
 
 def get_participantes_tiempos_por_trayecto(id_carrera, id_trayecto):
     cursor_local.execute("""
