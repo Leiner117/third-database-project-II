@@ -135,6 +135,8 @@ def add_participante(id_carrera, id_competidor, dorsal):
     if participante:
         return
     cursor_local.execute("CALL insertar_participante(%s, %s, %s)", (id_carrera, id_competidor, dorsal))
+    asociar_competidor_carrera(id_competidor, id_carrera)
+
     connection_local.commit()
 
 # agregar tiempo a la base_local (id_carrera, id_competidor, id_trayecto, tiempo), usar el procedimiento almacenado agregar_tiempo
