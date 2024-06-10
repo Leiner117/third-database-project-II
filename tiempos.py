@@ -62,7 +62,7 @@ def main():
     root.geometry(f'{window_width}x{window_height}+{position_right}+{position_top}')
     
     participantes = get_participantes()
-    ids_competidores = [p[1] for p in participantes]
+    ids_competidores = [p[2] for p in participantes]
 
     corredor_label = tk.Label(root, text="ID de Corredor:", font=("Arial", 14))
     corredor_label.grid(row=0, column=0, padx=10, pady=5, sticky="w")

@@ -186,7 +186,8 @@ class CompetidorMenu:
 
     def borrar_competidor(self, competidor):
         if messagebox.askyesno("Confirmar", "¿Está seguro de que desea eliminar este competidor?"):
-            if delete_competidor(competidor.id):
+            id= int(competidor[0])
+            if delete_competidor(id):
                 messagebox.showinfo("Éxito", "Competidor eliminado exitosamente")
                 self.mostrar_menu()
             else:
